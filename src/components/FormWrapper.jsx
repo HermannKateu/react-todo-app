@@ -1,14 +1,19 @@
 import { TextInput } from "./TextInput";
 import {ProductItem} from "./ProductItem";
 import {useState} from "react";
+import {ModalWrapper} from "./ModalWrapper";
 
 export const FormWrapper = () => {
     const [productsLength, setProductsLength] = useState(0);
     const [products, setProducts] = useState([]);
+    const [shouldDelete, setShouldDelete] = useState(false);
 
     const removeSelectedItem = (product) => {
-      setProducts(products.filter((item) => item !== product))
-        setProductsLength(products.length - 1)
+        setShouldDelete(!shouldDelete)
+        if (shouldDelete){
+            setProducts(products.filter((item) => item !== product))
+            setProductsLength(products.length - 1)
+        }
     }
 
     const allProduct = products.map((product, index) => {
@@ -17,7 +22,11 @@ export const FormWrapper = () => {
         </div>
     });
 
-    const getData = (data) => {
+    const getItemState = (state) => {
+        setShouldDelete(state)
+    }
+
+    const getData = (data, state) => {
         allProduct.push(data);
         setProductsLength(products.push(data))
         setProductsLength(allProduct.length)
@@ -28,11 +37,18 @@ export const FormWrapper = () => {
         setProductsLength(0)
     }
 
+    const IsModalOn = () => {
+      if (shouldDelete) {
+          return <ModalWrapper onCancel={getItemState} onDelete={getItemState} product={products}/>
+      }
+      return <></>
+    }
 
     return (<div>
-        <form className="bg-white h-[500px] w-[450px] rounded-lg flex px-4 flex-col gap-y-3">
+        <form className="bg-white h-[510px] w-[450px] rounded-lg flex px-4 flex-col gap-y-3">
             <h1 className="text-xl font-bold py-3">TODO APP</h1>
 
+            <IsModalOn />
             <TextInput onSendData={getData}/>
 
             <div  className="flex flex-col gap-y-3 py-2 h-[320px] overflow-y-scroll shadow-inner scrollbar pr-2">

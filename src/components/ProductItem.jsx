@@ -1,4 +1,4 @@
-import {TrashIcon} from "./icons/Trash";
+import { TrashIcon } from "./icons/Trash";
 
 export const ProductItem = ({product, onClick}) => {
   return (<div className="flex gap-x-3">
